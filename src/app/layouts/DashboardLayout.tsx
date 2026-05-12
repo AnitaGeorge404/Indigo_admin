@@ -1,12 +1,12 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, BarChart3, MessageSquare, Mail, Settings, LogOut, Bell, Search } from 'lucide-react';
+import { LayoutDashboard, Users, MessageSquare, Mail, Settings, LogOut, Bell, Search } from 'lucide-react';
 
 const MENU_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: Users, label: 'Applications', path: '/dashboard/applications' },
-  { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics' },
+  // { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics' },
   { icon: MessageSquare, label: 'Messages', path: '/dashboard/messages' },
   { icon: Mail, label: 'Subscribers', path: '/dashboard/subscribers' },
   { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
