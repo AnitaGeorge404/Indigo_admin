@@ -8,7 +8,7 @@ const MENU_ITEMS = [
   { icon: Users, label: 'Applications', path: '/dashboard/applications' },
   // { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics' },
   { icon: MessageSquare, label: 'Messages', path: '/dashboard/messages' },
-  { icon: Mail, label: 'Subscribers', path: '/dashboard/subscribers' },
+  { icon: Mail, label: 'Contacts', path: '/dashboard/subscribers' },
   { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
 ];
 

@@ -62,36 +62,40 @@ export default function ManagePositions() {
     return newErrors;
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const foundErrors = validate();
-
     if (Object.keys(foundErrors).length > 0) {
       setErrors(foundErrors);
       return;
     }
 
-    console.log("Submitting position:", form);
+    try {
+      const response = await fetch('http://localhost:3001/api/jobs/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await response.json(); // ← parse it first
+      console.log(data);
+      if (!response.ok) throw new Error('Failed to add position');
 
-    setSuccessMessage("Position added successfully!");
+      setSuccessMessage("Position added successfully!");
+      setForm({ title: "", type: "Full Time", description: "", location: "" });
+      setErrors({});
+      setTimeout(() => setSuccessMessage(""), 3000);
 
-    setForm({
-      title: "",
-      type: "Full Time",
-      description: "",
-      location: "",
-    });
-
-    setErrors({});
-
-    setTimeout(() => {
+    } catch (error) {
+      console.error(error);
       setSuccessMessage("");
-    }, 3000);
+      setErrors({ title: "Failed to submit. Please try again." });
+    }
   }
+
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-start justify-center px-4 py-12">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm overflow-hidden">
-        
+
         {/* Header */}
         <div className="bg-slate-900 px-6 py-4">
           <h1 className="text-white font-bold text-lg">
@@ -126,11 +130,10 @@ export default function ManagePositions() {
               placeholder="e.g. GIS Engineer"
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none transition-all
               focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500
-              ${
-                errors.title
+              ${errors.title
                   ? "border-red-300 bg-red-50"
                   : "border-slate-200"
-              }`}
+                }`}
             />
 
             {errors.title && (
@@ -175,11 +178,10 @@ export default function ManagePositions() {
               rows={4}
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none resize-y transition-all
               focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500
-              ${
-                errors.description
+              ${errors.description
                   ? "border-red-300 bg-red-50"
                   : "border-slate-200"
-              }`}
+                }`}
             />
 
             {errors.description && (
@@ -202,11 +204,10 @@ export default function ManagePositions() {
               placeholder="e.g. Bengaluru, India / Hybrid"
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none transition-all
               focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500
-              ${
-                errors.location
+              ${errors.location
                   ? "border-red-300 bg-red-50"
                   : "border-slate-200"
-              }`}
+                }`}
             />
 
             {errors.location && (

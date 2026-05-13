@@ -77,7 +77,7 @@ export function SubscribersPage() {
   if (loading) {
     return (
       <div className="text-center py-16 text-slate-400 text-sm">
-        Loading subscribers...
+        Loading contacts...
       </div>
     );
   }
@@ -98,10 +98,10 @@ export function SubscribersPage() {
       {/* ── Page Header ── */}
       <div className="mb-7">
         <h1 className="text-2xl font-extrabold text-slate-900">
-          Subscribers
+          Contacts
         </h1>
         <p className="text-slate-500 text-sm mt-1">
-          {subscribers.length} subscriber{subscribers.length !== 1 ? "s" : ""} in total.
+          {subscribers.length} contact{subscribers.length !== 1 ? "s" : ""} in total.
         </p>
       </div>
 
@@ -110,7 +110,7 @@ export function SubscribersPage() {
 
         <div className="bg-white rounded-2xl p-16 text-center shadow-sm">
           <p className="text-4xl mb-3">📋</p>
-          <p className="font-semibold text-slate-600">No subscribers yet.</p>
+          <p className="font-semibold text-slate-600">No contacts yet.</p>
           <p className="text-sm text-slate-400 mt-1">
             People who subscribe from your website will appear here.
           </p>

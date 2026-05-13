@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 // ── This describes the shape of one message object ──────────
 // Every message from the backend will have these fields
 type Message = {
-  id: number;
+  _id: string;
   name: string;
   email: string;
   position: string;
-  message: string;
-  date: string;
+  description: string;
+  createdAt: string;
 };
 
 // ── Message Card Component ──────────────────────────────────
@@ -21,7 +21,7 @@ function MessageCard({
   onDelete,
 }: {
   message: Message;
-  onDelete: (id: number) => void; // onDelete takes the message id and returns nothing
+  onDelete: (id: string) => void; // onDelete takes the message id and returns nothing
 }) {
   // Controls whether the full message is shown or just a preview
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -30,13 +30,13 @@ function MessageCard({
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   // If message is longer than 120 characters, we'll show a "Read more" button
-  const isLong = message.message.length > 120;
+  const isLong = message.description.length > 120;
 
   // Show full message if expanded, otherwise show first 120 chars + "..."
   const displayedMessage =
     expanded || !isLong
-      ? message.message
-      : message.message.slice(0, 120) + "...";
+      ? message.description
+      : message.description.slice(0, 120) + "...";
 
   // Get the first letter of the name for the avatar circle
   const initial = message.name.charAt(0).toUpperCase();
@@ -51,7 +51,7 @@ function MessageCard({
   const handleConfirmDelete = () => {
     // Call the onDelete function passed down from the parent (MessagesPage)
     // This will remove the card from the list
-    onDelete(message.id);
+    onDelete(message._id);
   };
 
   // ── Called when admin cancels the deletion ──────────────────
@@ -85,7 +85,7 @@ function MessageCard({
 
         {/* Date shown on the right */}
         <p className="text-xs text-slate-400">
-          {message.date}
+          {message.createdAt}
         </p>
 
       </div>
@@ -180,7 +180,7 @@ export function MessagesPage() {
     const fetchMessages = async () => {
       try {
         // Replace this URL with your real API endpoint
-        const response = await fetch("http://localhost:5000/api/messages");
+        const response = await fetch("http://localhost:3001/api/application");
 
         if (!response.ok) {
           throw new Error("Failed to fetch messages");
@@ -189,7 +189,7 @@ export function MessagesPage() {
         const data = await response.json();
 
         // Save the fetched messages into state
-        setMessages(data);
+        setMessages(data.data);
 
       } catch (err: any) {
         // If something goes wrong, save the error message
@@ -208,9 +208,23 @@ export function MessagesPage() {
   // ── Handle Delete ─────────────────────────────────────────
   // This function is called when a card's delete is confirmed.
   // It filters out the card with the matching id from the list.
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: string) => {
     // Keep all messages EXCEPT the one with this id
-    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+    // setMessages((prev) => prev.filter((msg) => msg._id !== id));
+
+     try {
+    const response = await fetch(`http://localhost:3001/api/application/delete/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) throw new Error("Failed to delete");
+
+    // Only remove from UI after successful backend delete
+    setMessages((prev) => prev.filter((msg) => msg._id !== id));
+
+  } catch (err) {
+    console.error("Delete failed:", err);
+  }
 
     // Optional: If you have a backend, you can also send a DELETE request:
     // fetch(`http://localhost:5000/api/messages/${id}`, { method: "DELETE" });
@@ -267,7 +281,7 @@ export function MessagesPage() {
 
           {messages.map((msg) => (
             <MessageCard
-              key={msg.id}       // React needs a unique key for each card
+              key={msg._id}       // React needs a unique key for each card
               message={msg}      // Pass the message data
               onDelete={handleDelete} // Pass the delete handler
             />
